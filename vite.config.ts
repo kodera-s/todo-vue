@@ -14,6 +14,6 @@ export default defineConfig({
   base: '/todo-vue/',
   build: {
     outDir: './docs',
-    assetsDir: './todo-vue/'
+    assetsDir: './todo-vue/todo-vue/'
   },
 })
