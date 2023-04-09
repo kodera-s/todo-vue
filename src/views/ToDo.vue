@@ -1,20 +1,20 @@
 <script setup lang="ts">
-  import { ref, computed } from 'vue'
+  import { ref, reactive, computed } from 'vue'
 
   import InputText from '../components/atoms/InputText.vue'
   import InputButton from '../components/atoms/Button.vue'
 
   const isListCheck = ref<Boolean>(false)
   const newItem = ref<String>()
-  const todos = ref([])
-  const itemID = ref<Number>(0)
+  const todos= ref<any>([])
+  const itemID = ref(0)
   const inputText = ref()
-  const displayStatus = ref<String>('all')
+  const displayStatus = ref('all')
   
   const computedList = computed(() => {
-    const list = []
+    const list: object[] = []
     if(displayStatus.value === "inProgress") {
-      todos.value.forEach(element => {
+      todos.value.forEach((element:any) => {
         if(!element.isDone) {
           list.push(element)
         }
@@ -22,7 +22,7 @@
       return list
     }
     if(displayStatus.value === "finished") {
-      todos.value.forEach(element => {
+      todos.value.forEach((element:any) => {
         if(element.isDone) {
           list.push(element)
         }
@@ -33,7 +33,7 @@
   })
 
   // inputTextからemitを受け取り
-  const emitInputValue = (props) => {
+  const emitInputValue = (props:String) => {
     newItem.value = props
   }
 
@@ -41,7 +41,7 @@
   const addItem = () => {
     if (!newItem.value) return
     itemID.value ++
-    const todo = {
+    const todo:any = {
       id: itemID.value,
       item: newItem.value,
       isDone: false
@@ -55,13 +55,23 @@
   }
   
   // 削除処理
-  const deleteItem = (index: number) => {
-    todos.value.splice(index, 1)
+  const deleteItem = (prop: Number) => {
+    let items: any = todos.value
+    // items.filter((item) => {
+    //   prop !== item.id
+    // })
+    const index = items.findIndex((element:any) => element.id === prop)
+    items.splice(index, 1)
+    todos.value = items
   }
 
   // status変更
-  const changeStatus = (index) => {
-    todos.value[index].isDone = !todos.value[index].isDone
+  const changeStatus = (prop: Number) => {
+    todos.value.forEach((element:any) => {
+      if(element.id === prop) {
+        element.isDone = !element.isDone
+      }
+    })
   }
 </script>
 
@@ -80,15 +90,15 @@
         </dt>
         <dd class="d-flex">
           <div class="me-5">
-            <input type="radio" name="display" id="all" value="all" v-model="displayStatus">
+            <input type="radio" name="display" id="all" value="all" v-model="displayStatus" class="me-1">
             <label for="all">すべて</label>
           </div>
           <div class="me-5">
-            <input type="radio" name="display" id="inProgress" value="inProgress" v-model="displayStatus">
+            <input type="radio" name="display" id="inProgress" value="inProgress" v-model="displayStatus" class="me-1">
             <label for="inProgress">作業中</label>
           </div>
           <div>
-            <input type="radio" name="display" id="finished" value="finished" v-model="displayStatus">
+            <input type="radio" name="display" id="finished" value="finished" v-model="displayStatus" class="me-1">
             <label for="finished">完了</label>
           </div>
         </dd>
@@ -106,10 +116,10 @@
         <div class="col-1 ps-3 pt-2">{{todo.id}}</div>
         <div class="col-9 text-break pe-5 pt-2">{{todo.item}}</div>
         <div class="col-1 d-flex justify-content-center">
-          <InputButton :buttonSet="todo.isDone ? 2 : 1" :isDisable="false" @onClick="changeStatus(index)" />
+          <InputButton :buttonSet="todo.isDone ? 2 : 1" :isDisable="false" @onClick="changeStatus(todo.id)" />
         </div>
         <div class="col-1 d-flex justify-content-center">
-          <InputButton :buttonSet=3 :isDisable="false" @onClick="deleteItem(index)" />
+          <InputButton :buttonSet=3 :isDisable="false" @onClick="deleteItem(todo.id)" />
         </div>
       </li>
     </ul>

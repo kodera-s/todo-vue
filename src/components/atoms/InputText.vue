@@ -3,7 +3,7 @@
 
   let inputValue = ref<String>()
   const emit = defineEmits(['inputText'])
-  const emitValue = (value) => {
+  const emitValue = ():void => {
     emit('inputText', inputValue.value)
   }
   const deleteText = () => {
