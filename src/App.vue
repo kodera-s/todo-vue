@@ -4,9 +4,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
   <header>
-    <h1>
-      ToDo Application
-    </h1>
+    <h1>ToDo Application aaa</h1>
   </header>
 
   <main>
